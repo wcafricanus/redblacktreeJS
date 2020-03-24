@@ -11,7 +11,7 @@ it('should arrange screen position of nodes correctly', function(){
         let newNode = new RBTreeNode(varList[i]);
         tree.insert(newNode);
     }
-    let treeVM = RBTreeVM(tree);
+    let treeVM = new RBTreeVM(tree);
     let arranger = new PositionArranger(100, 0, 10, 10);
     arranger.arrange(tree);
     assert.equal(tree.rootNode.posX, 100);

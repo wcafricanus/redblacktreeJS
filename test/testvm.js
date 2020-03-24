@@ -38,3 +38,19 @@ it('RBNodeVM should be notified of position changes of the RBTreeNode it binds t
     assert.equal(treeVM.nodes.get(tree.rootNode).targetX, 20);
     assert.equal(treeVM.nodes.get(tree.rootNode).targetY, 30);
 });
+
+
+it('RBNodeVM should be notified of color changes of the RBTreeNode it binds to.', function(){
+    let varList = [5];
+    let tree = new RedBlackTree();
+    for (let i = 0; i < varList.length; i++) {
+        let newNode = new RBTreeNode(varList[i]);
+        tree.insert(newNode);
+    }
+
+    let treeVM = new RBTreeVM(tree);
+    assert.equal(treeVM.nodes.get(tree.rootNode).color, 'black');
+
+    tree.rootNode.red = true;
+    assert.equal(treeVM.nodes.get(tree.rootNode).color, 'red');
+});
