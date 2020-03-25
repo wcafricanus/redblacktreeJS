@@ -1,6 +1,6 @@
 class BinaryTreeNode{
     constructor(value) {
-        this.value = value;
+        this._value = value;
         this.left = null;
         this.right = null;
         this.parent = null;
@@ -8,6 +8,18 @@ class BinaryTreeNode{
         this._posY = 0;
         this.radius = 20;
         this.positionChanged = null;
+        this.valueChanged = null;
+    }
+
+    get value(){
+        return this._value;
+    }
+
+    set value(value){
+        this._value = value;
+        if(this.valueChanged){
+            this.valueChanged(value);
+        }
     }
 
     get posX(){
@@ -56,6 +68,10 @@ class BinaryTreeNode{
         if(this.right)
             return this.right.countDescendants() + 1;
         return 0;
+    }
+
+    get isLeaf(){
+        return !(this.left||this.right);
     }
 }
 

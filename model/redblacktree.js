@@ -6,19 +6,21 @@ class RedBlackTree extends BinaryTree{
         super();
         this.rbTreeChanged = null;
     }
-    insert(value) {
-        let node=value;
-        if(!isNaN(value)) //  is a number
-        {
-            node = new RBTreeNode(value);
-        }
-        super.insert(node);
+
+    createNode(value){
+        let node = new RBTreeNode(value);
+        return node;
+    }
+
+    insert(node) {
+        node = super.insert(node);
         let nodeToCheck = node;
         while(nodeToCheck){
             nodeToCheck = this.checkBalance(nodeToCheck);
         }
         if (this.rbTreeChanged)
             this.rbTreeChanged(this);
+        return node;
     }
 
     checkBalance(node) {
@@ -87,6 +89,13 @@ class RedBlackTree extends BinaryTree{
             }
         }
         return recheck;
+    }
+
+    delete(node) {
+        super.delete(node);
+        if (this.rbTreeChanged){
+            this.rbTreeChanged(this);
+        }
     }
 
     leftRotate(G, N, P, LC) {

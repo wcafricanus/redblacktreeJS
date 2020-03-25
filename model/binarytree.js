@@ -1,3 +1,5 @@
+const BinaryTreeNode = require('./binarytreenode');
+
 class BinaryTree{
     constructor() {
         this.rootNode = null;
@@ -29,7 +31,32 @@ class BinaryTree{
         }
     }
 
+    find(value){
+        let next = this.rootNode;
+        while (next){
+            if (next.value === value){
+                break;
+            }
+            else if(next.value > value){
+                next = next.left;
+            }
+            else{
+                next = next.right;
+            }
+        }
+        return next;
+    }
+
+    createNode(value){
+        return new BinaryTreeNode(value);
+    }
+
     insert(node){
+        if(!isNaN(node)) //  is a number
+        {
+            node = this.createNode(node);
+        }
+
         let cursor = this.rootNode;
         let parent = null;
         let left = true;
@@ -48,6 +75,8 @@ class BinaryTree{
                 cursor = cursor.right;
             }
         }
+
+        return node;
     }
 
     tryInsertTo(candidateSlot, node, parent, left){
@@ -72,7 +101,51 @@ class BinaryTree{
     }
 
     delete(node){
-        // TODO
+        if(!isNaN(node)) //  is a number
+        {
+            node = this.find(node);
+        }
+
+        let toDelete = this.designateNodeToDelete(node);
+
+        this.remove(toDelete)
+    }
+
+    remove(node){
+        // root node
+        if (node===this.rootNode){
+            this.rootNode = null;
+            return;
+        }
+
+        // not root
+        if(node === node.parent.left)
+            node.parent.left = null;
+        else
+            node.parent.right = null;
+        node.parent = null;
+    }
+
+
+    designateNodeToDelete(node) {
+        if (node.isLeaf){
+            return node;
+        }
+        // node has one child
+        else if((node.left||node.right)&&!(node.left&&node.right)){
+            let child = node.left? node.left: node.right;
+            node.value = child.value;
+            return this.designateNodeToDelete(child);
+        }
+        // node has two children
+        else{
+            // find inorder successor
+            let stack = [];
+            this.in_order_left(node.right, stack);
+            let inorder_suc = stack.pop();
+            node.value = inorder_suc.value;
+            return this.designateNodeToDelete(inorder_suc);
+        }
     }
 }
 

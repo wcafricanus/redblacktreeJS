@@ -54,3 +54,14 @@ it('RBNodeVM should be notified of color changes of the RBTreeNode it binds to.'
     tree.rootNode.red = true;
     assert.equal(treeVM.nodes.get(tree.rootNode).color, 'red');
 });
+
+
+it('RBNodeVM should be notified of value changes of the RBTreeNode it binds to.', function(){
+    let tree = new RedBlackTree();
+    tree.insert(5);
+    let treeVM = new RBTreeVM(tree);
+    assert.equal(treeVM.nodes.get(tree.rootNode).text, '5');
+
+    tree.rootNode.value = 4;
+    assert.equal(treeVM.nodes.get(tree.rootNode).text, '4');
+});

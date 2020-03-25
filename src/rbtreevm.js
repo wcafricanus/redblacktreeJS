@@ -8,13 +8,18 @@ class RBTreeVM{
     }
 
     updateFromModel(rbtree) {
+        let swapMap = new Map();
+
         for(const node of rbtree){
             let nodeVM = this.nodes.get(node);
             // create nodeVM
             if(!nodeVM){
-                this.nodes.set(node, new RBNodeVM(node));
+                nodeVM = new RBNodeVM(node);
             }
+            swapMap.set(node, nodeVM);
         }
+
+        this.nodes = swapMap;
     }
 
     updatePositions(){

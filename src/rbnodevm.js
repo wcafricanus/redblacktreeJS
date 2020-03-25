@@ -10,6 +10,7 @@ class RBNodeVM{
         this.changeFlag = false;
         node.positionChanged = this.positionChangedCallback.bind(this);
         node.colorChanged = this.colorChangedCallback.bind(this);
+        node.valueChanged = this.valueChangedCallback.bind(this);
     }
 
     positionChangedCallback(x, y){
@@ -20,6 +21,10 @@ class RBNodeVM{
 
     colorChangedCallback(red){
         this.color = red? "red": "black";
+    }
+
+    valueChangedCallback(value){
+        this.text = value.toString();
     }
 
     updatePosition(scale){

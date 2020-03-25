@@ -15,7 +15,8 @@ for (let i = 0; i < varList.length; i++) {
 let treeVM = new RBTreeVM(tree);
 let arranger = new PositionArranger(canvas.width/2, 40, 50, 50);
 arranger.arrange(tree);
-document.getElementById("submitButton").onclick = addNodeByValue;
+document.getElementById("addButton").onclick = addNodeByValue;
+document.getElementById("deleteButton").onclick = deleteNodeByValue;
 let input = document.getElementById("nodeValue");
 input.addEventListener("keyup", function(event) {
     if (event.code === "Enter") {
@@ -32,6 +33,13 @@ function addNodeByValue() {
     let value = Number(textValue);
     let newNode = new RBTreeNode(value);
     tree.insert(newNode);
+    arranger.arrange(tree);
+}
+
+function deleteNodeByValue() {
+    let textValue = document.getElementById('nodeValue').value;
+    let value = Number(textValue);
+    tree.delete(value);
     arranger.arrange(tree);
 }
 
