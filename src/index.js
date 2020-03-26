@@ -26,6 +26,13 @@ input.addEventListener("keyup", function(event) {
         document.getElementById("addButton").click();
         input.value = '';
     }
+    if (event.code === "Delete") {
+        // Cancel the default action, if needed
+        event.preventDefault();
+        // Trigger the button element with a click
+        document.getElementById("deleteButton").click();
+        input.value = '';
+    }
 });
 
 function addNodeByValue() {
@@ -34,13 +41,20 @@ function addNodeByValue() {
     let newNode = new RBTreeNode(value);
     tree.insert(newNode);
     arranger.arrange(tree);
+    document.getElementById('errorMsg').innerHTML = '';
 }
 
 function deleteNodeByValue() {
     let textValue = document.getElementById('nodeValue').value;
     let value = Number(textValue);
-    tree.delete(value);
-    arranger.arrange(tree);
+    try {
+        tree.delete(value);
+        arranger.arrange(tree);
+        document.getElementById('errorMsg').innerHTML = '';
+    }
+    catch (e) {
+        document.getElementById('errorMsg').innerHTML = e.toString();
+    }
 }
 
 function update(){

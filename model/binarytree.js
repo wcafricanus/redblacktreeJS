@@ -105,6 +105,8 @@ class BinaryTree{
         {
             node = this.find(node);
         }
+        if (!node)
+            throw "Node Not Found.";
 
         let toDelete = this.designateNodeToDelete(node);
 
