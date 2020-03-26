@@ -1,2 +1,2 @@
 # redblacktreeJS
-Use index.html to launch the webpage.
+Open index.html to play with the demo.
