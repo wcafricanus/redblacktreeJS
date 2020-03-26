@@ -56,25 +56,18 @@ class RedBlackTree extends BinaryTree{
             if (node === node.parent.left && node.parent === grandpa.right) {
                 // right rotate parent
                 let P = node.parent;
-                let N = node;
-                let G = grandpa;
-                let RC = node.right;
-                this.rightRotate(G, N, P, RC);
+                this.rightRotate(P);
             }
             if (node === node.parent.right && node.parent === grandpa.left) {
                 // left rotate parent
-                let P = node.parent;
-                let N = node;
-                let G = grandpa;
-                let LC = node.left;
-                this.leftRotate(G, N, P, LC);
+                this.leftRotate(node.parent);
             }
 
             if (leftBranch) {
                 let P = grandpa.left;
                 let G = grandpa;
                 // right rotate grandpa
-                this.rightRotate(G.parent, P, G, P.right);
+                this.rightRotate(G);
                 // recolor
                 P.red = false;
                 G.red = true;
@@ -82,7 +75,7 @@ class RedBlackTree extends BinaryTree{
                 let P = grandpa.right;
                 let G = grandpa;
                 // left rotate grandpa
-                this.leftRotate(G.parent, P, G, P.left);
+                this.leftRotate(G);
                 // recolor
                 P.red = false;
                 G.red = true;
@@ -91,14 +84,102 @@ class RedBlackTree extends BinaryTree{
         return recheck;
     }
 
-    delete(node) {
-        super.delete(node);
-        if (this.rbTreeChanged){
-            this.rbTreeChanged(this);
+    preRemoveOperation(node){
+        // simple case, if either u or v is red
+        if (node.red){
+            return;
+        }
+        // both u and v are black
+        // sibling exists
+        if(node.sibling){
+            // and sibling is black
+            if (!node.sibling.red){
+                // left left case
+                if(node.sibling===node.parent.left && node.sibling.left && node.sibling.left.red){
+                    let r = node.sibling.left;
+                    let s = node.sibling;
+                    let p = node.parent;
+                    this.rightRotate(p);
+                    // recolor
+                    s.red = p.red;
+                    r.red = false;
+                    p.red = false;
+                }
+                // left right case
+                else if(node.sibling===node.parent.left && node.sibling.right && node.sibling.right.red){
+                    let r = node.sibling.right;
+                    let s = node.sibling;
+                    // double rotation
+                    this.leftRotate(node.sibling);
+                    this.rightRotate(node.parent);
+                    // recolor
+                    r.red = false;
+                    s.red = true;
+                }
+                // right right case
+                else if(node.sibling===node.parent.right && node.sibling.right && node.sibling.right.red){
+                    let r = node.sibling.right;
+                    let s = node.sibling;
+                    let p = node.parent;
+                    this.leftRotate(p);
+                    // recolor
+                    s.red = p.red;
+                    r.red = false;
+                    p.red = false;
+                }
+                // right left case
+                else if(node.sibling===node.parent.right && node.sibling.left&& node.sibling.left.red){
+                    let r = node.sibling.left;
+                    let s = node.sibling;
+                    // double rotation
+                    this.rightRotate(node.sibling);
+                    this.leftRotate(node.parent);
+                    // recolor
+                    r.red = false;
+                    s.red = true;
+                }
+                else // sibling is black and both sibling's children are black
+                {
+                    // recolor
+                    node.sibling.red = true;
+                    // if parent is black, recolor it to black makes it double black, recur the operation for parent.
+                    if (!node.parent.red)
+                        this.preRemoveOperation(node.parent);
+                    // if parent is red, recolor it to black, no need to do recursion.
+                    else
+                        node.parent.red = false;
+                }
+            }
+            // sibling is red
+            else{
+                let P = node.parent;
+                let S = node.sibling;
+                if (node.sibling===node.parent.right){
+                    this.leftRotate(P);
+                }
+                if (node.sibling===node.parent.left){
+                    this.rightRotate(P);
+                }
+                // recolor
+                P.red = true;
+                S.red = false;
+                this.preRemoveOperation(node);
+            }
         }
     }
 
-    leftRotate(G, N, P, LC) {
+    remove(node) {
+        this.preRemoveOperation(node);
+
+        super.remove(node);
+        if (this.rbTreeChanged)
+            this.rbTreeChanged(this);
+    }
+
+    leftRotate(P) {
+        let G = P.parent;
+        let N = P.right;
+        let LC = N.left;
         // 1. link grandpa self
         if (G)
             if (G.left===P)
@@ -118,7 +199,10 @@ class RedBlackTree extends BinaryTree{
             this.rootNode = N;
     }
 
-    rightRotate(G, N, P, RC) {
+    rightRotate(P) {
+        let G = P.parent;
+        let N = P.left;
+        let RC = N.right;
         // 1. link grandpa self
         if (G)
             if (G.right===P)

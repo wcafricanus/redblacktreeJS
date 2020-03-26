@@ -116,3 +116,14 @@ it('binary tree deletes non-leaf correctly', function(){
     tree.delete(8);
     assert(tree.rootNode === null);
 });
+
+it('node should get its sibling correctly', function(){
+    let node = tree.rootNode.left;
+    let sibling = node.sibling;
+    assert(sibling.value === 6);
+
+    assert(tree.rootNode.sibling === null);
+
+    let node8 = tree.find(8);
+    assert(node8.sibling === null);
+});

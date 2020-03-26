@@ -42,6 +42,13 @@ class BinaryTreeNode{
             this.positionChanged(this._posX, this._posY);
     }
 
+    get sibling(){
+        if (this.parent){
+            return (this.parent.left === this)? this.parent.right: this.parent.left;
+        }
+        return null;
+    }
+
     connectLeft(node){
         this.left = node;
         node.parent = this;
